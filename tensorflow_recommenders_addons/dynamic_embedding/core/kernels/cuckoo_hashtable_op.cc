@@ -363,6 +363,10 @@ class CuckooHashTableOfTensors final : public LookupInterface {
       value_buffer = value_buffer_vector.data();
       value_offset = 0;
       total_saved += dump_counter;
+      // temprorary solution to fix hanging while loop
+      if(dump_counter == 0) {
+        break;
+      }
     }
 
     if (key_offset > 0 && value_offset > 0) {
@@ -377,7 +381,7 @@ class CuckooHashTableOfTensors final : public LookupInterface {
     TF_RETURN_IF_ERROR(key_writer->Sync());
     TF_RETURN_IF_ERROR(value_writer->Sync());
 
-    LOG(INFO) << "Finish saving " << total_saved << " keys and values to "
+    LOG(INFO) << "Finish custom saving " << total_saved << " keys and values to "
               << key_filepath << " and " << value_filepath << " in total.";
 
     if (need_tmp_file) {
